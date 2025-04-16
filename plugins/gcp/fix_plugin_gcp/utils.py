@@ -98,8 +98,19 @@ def load_credentials(path: str):
     wait_exponential_max=300000,
     retry_on_exception=retry_on_error,
 )
+
+def getUniverseApiDomain(service = "endpoint"):
+    universeDomain = Config.gcp.universeDomain;
+    match service:
+        case "endpoint":
+            return universeDomain
+        case "discovery":
+            return f"{{api}}.{universeDomain}/$discovery/rest?version={{apiVersion}}"
+        case _:
+            return f"{service}.{universeDomain}"
+
 def gcp_client(service: str, version: str, credentials: str):
-    client = discovery.build(service, version, credentials=credentials, cache=MemoryCache())
+    client = discovery.build(service, version, credentials=credentials, cache=MemoryCache(), discoveryServiceUrl=getUniverseApiDomain(service="discovery"))
     return client
 
 

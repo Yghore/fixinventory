@@ -12,6 +12,8 @@ from fixlib.baseresources import BaseDatabase, DatabaseInstanceStatus, MetricNam
 from fixlib.json_bender import F, Bender, S, Bend, ForallBend, K, MapEnum, AsInt
 from fixlib.types import Json
 
+from plugins.gcp.fix_plugin_gcp.utils import getUniverseApiDomain
+
 log = logging.getLogger("fix.plugins.gcp")
 service_name = "sqladmin"
 
@@ -773,7 +775,7 @@ class GcpSqlDatabaseInstance(GcpResource, BaseDatabase):
         queries.extend(
             [
                 GcpMonitoringQuery.create(
-                    query_name="cloudsql.googleapis.com/database/cpu/utilization",
+                    query_name=f"{getUniverseApiDomain(service="cloudsql")}/database/cpu/utilization",
                     period=delta,
                     ref_id=f"{self.kind}/{self.id}/{self.region().id}",
                     metric_name=MetricName.CpuUtilization,
@@ -805,9 +807,9 @@ class GcpSqlDatabaseInstance(GcpResource, BaseDatabase):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    ("cloudsql.googleapis.com/database/network/connections", MetricName.DatabaseConnections),
-                    ("cloudsql.googleapis.com/database/network/sent_bytes_count", MetricName.NetworkBytesSent),
-                    ("cloudsql.googleapis.com/database/network/received_bytes_count", MetricName.NetworkBytesReceived),
+                    (f"{getUniverseApiDomain(service="cloudsql")}/database/network/connections", MetricName.DatabaseConnections),
+                    (f"{getUniverseApiDomain(service="cloudsql")}/database/network/sent_bytes_count", MetricName.NetworkBytesSent),
+                    (f"{getUniverseApiDomain(service="cloudsql")}/database/network/received_bytes_count", MetricName.NetworkBytesReceived),
                 ]
             ]
         )
@@ -828,8 +830,8 @@ class GcpSqlDatabaseInstance(GcpResource, BaseDatabase):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    ("cloudsql.googleapis.com/database/disk/read_ops_count", MetricName.DiskRead),
-                    ("cloudsql.googleapis.com/database/disk/write_ops_count", MetricName.DiskWrite),
+                    (f"{getUniverseApiDomain(service="cloudsql")}/database/disk/read_ops_count", MetricName.DiskRead),
+                    (f"{getUniverseApiDomain(service="cloudsql")}/database/disk/write_ops_count", MetricName.DiskWrite),
                 ]
             ]
         )
