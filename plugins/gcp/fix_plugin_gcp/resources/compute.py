@@ -37,7 +37,7 @@ from fixlib.baseresources import (
 from fixlib.json_bender import Bender, S, Bend, ForallBend, MapDict, F, MapEnum, AsInt
 from fixlib.types import Json
 
-from plugins.gcp.fix_plugin_gcp.utils import getUniverseApiDomain
+from fix_plugin_gcp.utils import get_universe_domain_api
 
 log = logging.getLogger("fix.plugins.gcp")
 
@@ -1259,7 +1259,7 @@ class GcpDisk(GcpResource, BaseVolume):
         queries.extend(
             [
                 GcpMonitoringQuery.create(
-                    query_name=f"{getUniverseApiDomain(service="compute")}/instance/disk/average_io_queue_depth",
+                    query_name=f"{get_universe_domain_api(service="compute")}/instance/disk/average_io_queue_depth",
                     period=delta,
                     ref_id=f"{self.kind}/{self.id}/{self.region().id}",
                     metric_name=MetricName.VolumeQueueLength,
@@ -1286,8 +1286,11 @@ class GcpDisk(GcpResource, BaseVolume):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/read_ops_count", MetricName.DiskRead),
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/write_ops_count", MetricName.DiskWrite),
+                    (f"{get_universe_domain_api(service="compute")}/instance/disk/read_ops_count", MetricName.DiskRead),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/disk/write_ops_count",
+                        MetricName.DiskWrite,
+                    ),
                 ]
             ]
         )
@@ -1306,8 +1309,14 @@ class GcpDisk(GcpResource, BaseVolume):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/read_bytes_count", MetricName.DiskRead),
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/write_bytes_count", MetricName.DiskWrite),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/disk/read_bytes_count",
+                        MetricName.DiskRead,
+                    ),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/disk/write_bytes_count",
+                        MetricName.DiskWrite,
+                    ),
                 ]
             ]
         )
@@ -1814,10 +1823,16 @@ class GcpForwardingRule(GcpResource, BaseLoadBalancer):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    (f"{getUniverseApiDomain(service="loadbalancing")}/https/{lb_type}/request_count", MetricName.RequestCount),
-                    (f"{getUniverseApiDomain(service="loadbalancing")}/https/{lb_type}/request_bytes_count", MetricName.RequestBytesCount),
                     (
-                        f"{getUniverseApiDomain(service="loadbalancing")}/https/{lb_type}/response_bytes_count",
+                        f"{get_universe_domain_api(service="loadbalancing")}/https/{lb_type}/request_count",
+                        MetricName.RequestCount,
+                    ),
+                    (
+                        f"{get_universe_domain_api(service="loadbalancing")}/https/{lb_type}/request_bytes_count",
+                        MetricName.RequestBytesCount,
+                    ),
+                    (
+                        f"{get_universe_domain_api(service="loadbalancing")}/https/{lb_type}/response_bytes_count",
                         MetricName.ResponseBytesCount,
                     ),
                 ]
@@ -1826,7 +1841,7 @@ class GcpForwardingRule(GcpResource, BaseLoadBalancer):
         queries.extend(
             [
                 GcpMonitoringQuery.create(
-                    query_name=f"{getUniverseApiDomain(service="loadbalancing")}/https/{lb_type}/backend_latencies",
+                    query_name=f"{get_universe_domain_api(service="loadbalancing")}/https/{lb_type}/backend_latencies",
                     period=delta,
                     ref_id=f"{self.kind}/{self.id}/{self.region().id}",
                     metric_name=MetricName.Latency,
@@ -3746,7 +3761,7 @@ class GcpInstance(GcpResource, BaseInstance):
         queries.extend(
             [
                 GcpMonitoringQuery.create(
-                    query_name=f"{getUniverseApiDomain(service="compute")}/instance/cpu/utilization",
+                    query_name=f"{get_universe_domain_api(service="compute")}/instance/cpu/utilization",
                     period=delta,
                     ref_id=f"{self.kind}/{self.id}/{self.region().id}",
                     metric_name=MetricName.CpuUtilization,
@@ -3772,8 +3787,14 @@ class GcpInstance(GcpResource, BaseInstance):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    (f"{getUniverseApiDomain(service="compute")}/instance/network/received_bytes_count", MetricName.NetworkIn),
-                    (f"{getUniverseApiDomain(service="compute")}/instance/network/sent_bytes_count", MetricName.NetworkOut),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/network/received_bytes_count",
+                        MetricName.NetworkIn,
+                    ),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/network/sent_bytes_count",
+                        MetricName.NetworkOut,
+                    ),
                 ]
             ]
         )
@@ -3792,8 +3813,11 @@ class GcpInstance(GcpResource, BaseInstance):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/read_ops_count", MetricName.DiskRead),
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/write_ops_count", MetricName.DiskWrite),
+                    (f"{get_universe_domain_api(service="compute")}/instance/disk/read_ops_count", MetricName.DiskRead),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/disk/write_ops_count",
+                        MetricName.DiskWrite,
+                    ),
                 ]
             ]
         )
@@ -3812,8 +3836,14 @@ class GcpInstance(GcpResource, BaseInstance):
                 )
                 for stat in STANDART_STAT_MAP
                 for name, metric_name in [
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/read_bytes_count", MetricName.DiskRead),
-                    (f"{getUniverseApiDomain(service="compute")}/instance/disk/write_bytes_count", MetricName.DiskWrite),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/disk/read_bytes_count",
+                        MetricName.DiskRead,
+                    ),
+                    (
+                        f"{get_universe_domain_api(service="compute")}/instance/disk/write_bytes_count",
+                        MetricName.DiskWrite,
+                    ),
                 ]
             ]
         )

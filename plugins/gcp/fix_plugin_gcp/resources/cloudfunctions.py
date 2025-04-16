@@ -9,7 +9,7 @@ from fix_plugin_gcp.resources.monitoring import normalizer_factory, STANDART_STA
 from fixlib.baseresources import BaseServerlessFunction, MetricName
 from fixlib.json_bender import Bender, S, Bend, ForallBend
 
-from plugins.gcp.fix_plugin_gcp.utils import getUniverseApiDomain
+from fix_plugin_gcp.utils import get_universe_domain_api
 
 
 @define(eq=False, slots=False)
@@ -309,7 +309,7 @@ class GcpCloudFunction(GcpResource, BaseServerlessFunction):
         queries.extend(
             [
                 GcpMonitoringQuery.create(
-                    query_name=f"{getUniverseApiDomain(service="cloudfunctions")}/function/execution_count",
+                    query_name=f"{get_universe_domain_api(service="cloudfunctions")}/function/execution_count",
                     period=delta,
                     ref_id=f"{self.kind}/{self.id}/{self.region().id}",
                     metric_name=MetricName.Invocations,
@@ -329,7 +329,7 @@ class GcpCloudFunction(GcpResource, BaseServerlessFunction):
         queries.extend(
             [
                 GcpMonitoringQuery.create(
-                    query_name=f"{getUniverseApiDomain(service="cloudfunctions")}/function/execution_count",
+                    query_name=f"{get_universe_domain_api(service="cloudfunctions")}/function/execution_count",
                     period=delta,
                     ref_id=f"{self.kind}/{self.id}/{self.region().id}",
                     metric_name=MetricName.Errors,
@@ -349,7 +349,7 @@ class GcpCloudFunction(GcpResource, BaseServerlessFunction):
         queries.extend(
             [
                 GcpMonitoringQuery.create(
-                    query_name=f"{getUniverseApiDomain(service="cloudfunctions")}/function/execution_times",
+                    query_name=f"{get_universe_domain_api(service="cloudfunctions")}/function/execution_times",
                     period=delta,
                     ref_id=f"{self.kind}/{self.id}/{self.region().id}",
                     metric_name=MetricName.Duration,

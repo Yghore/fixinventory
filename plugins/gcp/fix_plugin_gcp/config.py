@@ -7,7 +7,7 @@ class GcpConfig:
     kind: ClassVar[str] = "gcp"
     service_account: List[str] = field(factory=list, metadata={"description": "GCP service account file(s)"})
     project: List[str] = field(factory=list, metadata={"description": "GCP project(s)"})
-    universeDomain: str = field(metadata={"description": "Universe domain for API"}, default="googleapis.com")
+    universe_domain: str = field(default="googleapis.com", metadata={"description": "Universe domain for API"})
     collect: List[str] = field(
         factory=list,
         metadata={"description": "GCP services to collect (default: all)"},

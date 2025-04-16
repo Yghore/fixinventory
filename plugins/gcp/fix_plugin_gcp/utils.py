@@ -92,25 +92,30 @@ def load_credentials(path: str):
         raise ValueError(f"No credentials file found at {file}")
 
 
+def get_universe_domain_api(service: str = "endpoint"):
+    universe_domain = Config.gcp.universe_domain
+    if service == "endpoint":
+        return universe_domain
+    elif service == "discovery":
+        return f"{{api}}.{universe_domain}/$discovery/rest?version={{apiVersion}}"
+    else:
+        return f"{service}.{universe_domain}"
+
+
 @retry(
     stop_max_attempt_number=10,
     wait_exponential_multiplier=3000,
     wait_exponential_max=300000,
     retry_on_exception=retry_on_error,
 )
-
-def getUniverseApiDomain(service = "endpoint"):
-    universeDomain = Config.gcp.universeDomain;
-    match service:
-        case "endpoint":
-            return universeDomain
-        case "discovery":
-            return f"{{api}}.{universeDomain}/$discovery/rest?version={{apiVersion}}"
-        case _:
-            return f"{service}.{universeDomain}"
-
 def gcp_client(service: str, version: str, credentials: str):
-    client = discovery.build(service, version, credentials=credentials, cache=MemoryCache(), discoveryServiceUrl=getUniverseApiDomain(service="discovery"))
+    client = discovery.build(
+        service,
+        version,
+        credentials=credentials,
+        cache=MemoryCache(),
+        discoveryServiceUrl=get_universe_domain_api(service="discovery"),
+    )
     return client
 
 
